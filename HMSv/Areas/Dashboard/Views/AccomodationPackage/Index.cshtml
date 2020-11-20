@@ -1,0 +1,91 @@
+﻿@model HMSv.Areas.Dashboard.ViewModels.AccomodationPackageListingModel
+@{
+    ViewBag.Title = "Index";
+}
+<div class="row mb-3">
+    <div class="col col-lg-12">
+        <h2>Accomodation Packages</h2>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col col-lg-12">
+        <form id="searchFrm">
+            <div class="input-group">
+                <input type="text" id="searchTxt" class="form-control" placeholder="Search.." aria-label="Search">
+                @if (Model.AccomodationTypes != null && Model.AccomodationTypes.Count > 0)
+                {
+                    <select id="AccomodationTypeID" class="form-control">
+                        <option value="0">Select Type</option>
+                        @foreach (var item in Model.AccomodationTypes)
+                        {
+                            <option value="@item.ID">@item.Name</option>
+}
+                    </select>}
+                <div class="invalid-feedback">Please fill out this field.</div>
+                <div class="input-group-append">
+                    <button id="searchBtn" data-href="@Url.Action("Listing","AccomodationPackage")" class="btn btn-sm btn-outline-success" type="button"><i class="fas fa-search mr-1"></i>Search</button>
+                    <button id="resetBtn" data-href="@Url.Action("Listing","AccomodationPackage")" class="btn-sm btn-outline-dark" type="button"><i class="fas fa-undo-alt mr-1"></i>Reset</button>
+                    <button data-href="@Url.Action("Create","AccomodationPackage")" class="btn-sm btn-outline-primary actionBtn" type="button" data-toggle="modal" data-target="#actionModal">
+                        <i class="fas fa-plus mr-1"></i>Create
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12">
+        <div id="tableContainer">
+            @{ Html.RenderAction("Listing"); }
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="actionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+    </div>
+</div>
+
+<script>
+    $("#searchBtn").click(function () {
+        var searchVal = $("#searchTxt").val();
+        var searchID = $("#AccomodationTypeID").val();
+            $.ajax({
+                url: $(this).attr("data-href"),
+                data: {
+                    search: searchVal,
+                    accomodationTypeID: searchID
+                }
+            })
+            .done(function (response) {
+                $("#tableContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail");
+            })
+
+    });
+    $("#resetBtn").click(function () {
+        var searchVal = "";
+
+        $.ajax({
+            url: $(this).attr("data-href"),
+            data: {
+                search: searchVal
+            }
+        })
+        .done(function (response) {
+            $("#tableContainer").html(response);
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Fail");
+        })
+
+    });
+</script>
+
+
+
