@@ -62,6 +62,10 @@
     <Compile Include="Migrations\202011171734549_Initial-Catalog.Designer.cs">
       <DependentUpon>202011171734549_Initial-Catalog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011201557518_AddedAccomodationTable.cs" />
+    <Compile Include="Migrations\202011201557518_AddedAccomodationTable.Designer.cs">
+      <DependentUpon>202011201557518_AddedAccomodationTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,6 +82,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202011171734549_Initial-Catalog.resx">
       <DependentUpon>202011171734549_Initial-Catalog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011201557518_AddedAccomodationTable.resx">
+      <DependentUpon>202011201557518_AddedAccomodationTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

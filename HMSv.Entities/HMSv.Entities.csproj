@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccomodationPackages.cs" />
+    <Compile Include="Accomodations.cs" />
     <Compile Include="AccomodationTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
