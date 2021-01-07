@@ -1,0 +1,65 @@
+﻿
+@model HMSv.Areas.Dashboard.ViewModels.UsersCreateModel
+
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">Delete Users</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-danger" role="alert">
+                <h6>Do you really want to delete this entry?</h6>
+            </div>
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="Username">User Name</label>
+                    <input type="text" class="form-control" id="Username" name="Username" value="@Model.UserName" disabled="disabled">
+                </div>
+                @Html.HiddenFor(a => a.ID)
+            </form>
+        </div>
+        @*<div class="errorMsg">
+
+            </div>*@
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            <button id="deleteBtn" type="button" class="btn btn-primary">Yes</button>
+
+        </div>
+    </div>
+}
+
+<script>
+    $("#deleteBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Delete","User")',
+            type: 'post',
+            data: $("deleteForm").serialize()
+        })
+        .done(function (response) {
+            if (response.Success) {
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
+
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Message);
+            }
+        })
+    });
+</script>
+
+
+

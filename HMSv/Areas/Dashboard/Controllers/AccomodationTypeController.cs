@@ -25,20 +25,24 @@ namespace HMSv.Areas.Dashboard.Controllers
             return View();
         }
 
-		public ActionResult Listing(string search)
+		public ActionResult Listing(string search, int? accomodationTypeID, int? page)
 		{
+			page = page ?? 1;
 			var viewModel = new AccomodationTypesListingModel();
 			var accomodationTypes = _service.GetAllAccomodationTypes();
 			viewModel.AccomodationTypes = accomodationTypes;
 			if (!string.IsNullOrEmpty(search))
 				viewModel.AccomodationTypes = viewModel.AccomodationTypes.Where(a=>a.Name.ToLower().Contains(search.ToLower())).ToList();
+
+			viewModel.Pager = new PagerViewModel(viewModel.AccomodationTypes.Count, page, 3);
+			var skip = (page.Value - 1) * 3;// 3 is the records to skip..
+			viewModel.AccomodationTypes = viewModel.AccomodationTypes.OrderBy(a => a.ID).Skip(skip).Take(3).ToList();
 			return PartialView("_Listing",viewModel);
 		}
 
 		public ActionResult Create()
 		{
 			var viewModel = new AccomodationTypesCreateModel();
-			ViewBag.Action = "Create";
 			return PartialView("_Action", viewModel);
 		}
 
@@ -52,17 +56,34 @@ namespace HMSv.Areas.Dashboard.Controllers
 			else
 			{
 				var viewModel = new AccomodationTypesCreateModel(result);
-				ViewBag.Action = "Edit";
 				return PartialView("_Action", viewModel);
 			}
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Save(AccomodationTypes model)
+		public JsonResult Save(AccomodationTypes model)
 		{
-			var result = _service.SaveAccomodationTypes(model);
-			return RedirectToAction("Listing");
+			var json = new JsonResult();
+			var result = false;
+			var error = "";
+			try
+			{
+				result = _service.SaveAccomodationTypes(model);
+			}
+			catch (Exception exp)
+			{
+				error = exp.Message + " " + exp.InnerException.Message;
+			}
+			if (result)
+			{
+				json.Data = new { Success = true, Link = Url.Action("Listing", "AccomodationType"), Message = Status.Successfull + " " + error };
+			}
+			else
+			{
+				json.Data = new { Success = false, Link = Url.Action("Listing", "AccomodationType"), Message = Status.Failed + " " + error };
+			}
+			return json;
 		}
 
 		public ActionResult Delete(int Id)
@@ -78,18 +99,28 @@ namespace HMSv.Areas.Dashboard.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Delete(AccomodationTypes model)
+		public JsonResult Delete(AccomodationTypes model)
 		{
-			var result = _service.DeleteAccomodationType(model.ID);
+			var json = new JsonResult();
+			var error = "";
+			var result = false;
+			try
+			{
+				result = _service.DeleteAccomodationType(model.ID);
+			}
+			catch(Exception exp)
+			{
+				error = exp.Message + " " + exp.InnerException.Message;
+			}
 			if (result)
 			{
-				return RedirectToAction("Listing");
+				json.Data = new { Success = true, Link = Url.Action("Listing", "AccomodationType"), Message = Status.Successfull };
 			}
 			else
 			{
-				var viewModel = new AccomodationTypesCreateModel(model);
-				return PartialView("_Delete", viewModel);
+				json.Data = new { Success = false, Link = Url.Action("Listing", "AccomodationType"), Message = Status.Failed + " " + error };
 			}
+			return json;
 		}
 		protected override void Dispose(bool disposing)
 		{

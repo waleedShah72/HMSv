@@ -1,0 +1,108 @@
+﻿
+@model HMSv.Areas.Dashboard.ViewModels.UsersCreateModel
+
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">
+                @if (!string.IsNullOrEmpty(Model.ID))
+				{
+                    <span>Edit a User</span>
+				}
+				else
+				{
+                    <span>Create a User</span>
+				}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Form-->
+            <form id="actionForm">
+                <div class="form-group">
+                    <label for="UserName">Email</label>
+                    <input type="email" class="form-control" id="UserName" name="UserName" value="@Model.UserName" placeholder="Enter email.">
+
+                </div>
+                <div class="form-group">
+                    <label for="Fullname">Fullname</label>
+                    <input type="text" class="form-control" id="Fullname" name="Fullname" value="@Model.FullName" placeholder="Enter Full name.">
+
+                </div>
+                <div class="form-group">
+                    <label for="Address">Address</label>
+                    <input type="text" class="form-control" id="Address" name="Address" value="@Model.Address" placeholder="Enter address.">
+
+                </div>
+                <div class="form-group">
+                    <label for="City">City</label>
+                    <input type="text" class="form-control" id="City" name="City" value="@Model.City" placeholder="Enter your City name.">
+
+                </div>
+                <div class="form-group">
+                    <label for="Country">Country</label>
+                    <input type="text" class="form-control" id="Country" name="Country" value="@Model.Country" placeholder="Enter Country name.">
+
+                </div>
+                @*<div class="form-group">
+                    <label for="RoleId">User Role</label>
+                    <select class="form-control" id="AccomodationPackageID" name="AccomodationPackageID">
+                        @if (Model.Roles != null||Model.Roles.Count>0)
+                        {
+                            foreach (var item in Model.Roles)
+                            {
+                                <option value="@item.Id" @(item.Id == Model.RoleID ? "selected" : string.Empty)>
+                                    @item.Name
+                                </option>
+}
+                        }
+                    </select>
+                </div>*@
+                @Html.HiddenFor(a => a.ID)
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="saveBtn" type="button" class="btn btn-primary">Save</button>
+
+        </div>
+    </div>
+}
+
+<script>
+    $("#saveBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Save","User")',
+            type: 'post',
+            data: $("#actionForm").serialize()
+        })
+        .done(function (response) {
+            if (response.Success)
+            {
+                //success state..
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#errors").html(response.Errors);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Errors);
+            }
+
+        })
+    });
+</script>
+
+

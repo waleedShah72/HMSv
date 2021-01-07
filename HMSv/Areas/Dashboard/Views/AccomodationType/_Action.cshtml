@@ -4,7 +4,16 @@
 {
     <div class="modal-content">
         <div class="modal-header bg-info text-white">
-            <h5 class="modal-title" id="exampleModalLongTitle">@ViewBag.Action new Accomodation Type</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">
+                @if (Model.ID==0)
+                {
+                  <span>Create a new Accomodation Type</span>
+                }
+                else
+                {
+                    <span>Edit an Accomodation Type</span>
+                }
+            </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span class="text-white" aria-hidden="true">&times;</span>
             </button>
@@ -37,25 +46,29 @@
 }
 
 <script>
-    $("#saveBtn").on('click', function (e) {
-        e.preventDefault();
+    $("#saveBtn").click(function () {
         $.ajax({
             url: '@Url.Action("Save","AccomodationType")',
             type: 'post',
             data: $("#actionForm").serialize()
         })
         .done(function (response) {
-            $("#actionModal").modal("hide");
+            if (response.Success) {
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
 
-            $("#tableContainer").html(response);
-            //location.reload();
-            //if (response.Success)
-            //{
-            //   // location.reload();
-            //}
-            //else {
-            //    $(".errorMsg").html(response.Message);
-            //}
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Message);
+            }
 
         })
     });

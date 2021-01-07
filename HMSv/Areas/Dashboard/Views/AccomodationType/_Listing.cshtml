@@ -25,6 +25,40 @@
 }
         </tbody>
     </table>
+ <!-- pager -->
+    if (Model.Pager.EndPage > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                @if (Model.Pager.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a data-href="@Url.Action("Listing","AccomodationType")" class="page-link">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" data-href="@Url.Action("Listing","AccomodationType",new { page= Model.Pager.CurrentPage - 1 }) ">Previous</a>
+                    </li>
+}
+
+                @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+                {
+                    <li class="page-item @(page == Model.Pager.CurrentPage ? "active" : "")">
+                        <a class="page-link" data-href="@Url.Action("Listing","AccomodationType",new {page=page }) ">@page</a>
+                    </li>
+}
+
+                @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" data-href="@Url.Action("Listing","AccomodationType",new { page=(Model.Pager.CurrentPage + 1 )} )">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" data-href="@Url.Action("Listing","AccomodationType", new { page=(Model.Pager.TotalPages)})">Last</a>
+                    </li>
+}
+            </ul>
+        </nav>
+    }
 }
 else
 {
@@ -41,6 +75,15 @@ else
         })
         .done(function (response) {
             $("#actionModal .modal-dialog").html(response);
+        });
+    });
+    $(".page-link").click(function () {
+
+        $.ajax({
+            url: $(this).attr("data-href")
+        })
+        .done(function (response) {
+            $("#tableContainer").html(response);
         });
     });
 </script>

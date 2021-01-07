@@ -61,7 +61,6 @@ namespace HMSv.Areas.Dashboard.Controllers
 			{
 				AccomodationPackages = _servicePackages.GetAllAccomodationPackages()
 			};
-			ViewBag.Action = "Create";
 			return PartialView("_Action", viewModel);
 		}
 
@@ -78,17 +77,34 @@ namespace HMSv.Areas.Dashboard.Controllers
 				{
 					AccomodationPackages=_servicePackages.GetAllAccomodationPackages()
 				};
-				ViewBag.Action = "Edit";
 				return PartialView("_Action", viewModel);
 			}
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Save(Accomodations model)
+		public JsonResult Save(Accomodations model)
 		{
-			var result = _service.SaveAccomodations(model);
-			return RedirectToAction("Listing");
+			var json = new JsonResult();
+			var error = "";
+			var result = false;
+			try
+			{
+				result = _service.SaveAccomodations(model);
+			}
+			catch (Exception exp)
+			{
+				error = exp.Message + " " + exp.InnerException.Message;
+			}
+			if (result)
+			{
+				json.Data = new { Success = true, Link = Url.Action("Listing", "Accomodation"), Message = Status.Successfull };
+			}
+			else
+			{
+				json.Data = new { Success = false, Link = Url.Action("Listing", "Accomodation"), Message = Status.Failed+" "+error };
+			}
+			return json;
 		}
 
 		public ActionResult Delete(long Id)
@@ -99,19 +115,34 @@ namespace HMSv.Areas.Dashboard.Controllers
 		}
 
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(Accomodations model)
+		public JsonResult Delete(Accomodations model)
 		{
-			var result = _service.DeleteAccomodation(model.ID);
+			var json = new JsonResult();
+			var error = "";
+			var result = false;
+			try
+			{
+				result = _service.DeleteAccomodation(model.ID);
+			}
+			catch (Exception exp)
+			{
+				error = exp.Message + " " + exp.InnerException.Message;
+			}
 			if (result)
 			{
-				return RedirectToAction("Listing");
+				json.Data = new { Success = true, Link = Url.Action("Listing", "Accomodation"), Message = Status.Successfull };
 			}
 			else
 			{
-				var viewModel = new AccomodationCreateModel(model);
-				return PartialView("_Delete", viewModel);
+				json.Data = new { Success = false, Link = Url.Action("Listing", "Accomodation"), Message = Status.Failed+" "+error };
 			}
+			return json;
+		}
+		protected override void Dispose(bool disposing)
+		{
+			_service = null;
+			_servicePackages = null;
+			base.Dispose(disposing);
 		}
 	}
 }

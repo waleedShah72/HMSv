@@ -5,7 +5,16 @@
 {
     <div class="modal-content">
         <div class="modal-header bg-info text-white">
-            <h5 class="modal-title">@ViewBag.Action new Accomodation Package</h5>
+            <h5 class="modal-title">
+                @if (Model.ID == 0)
+                {
+                    <span>Create new Accomodation Package</span>
+}
+                else
+                {
+                    <span>Edit Accomodation Package</span>
+                }
+            </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span class="text-white" aria-hidden="true">&times;</span>
             </button>
@@ -28,7 +37,7 @@
                                 <option value="@item.ID" @(item.ID == Model.AccomodationTypeID ? "selected" : string.Empty)>
                                     @item.Name
                                 </option>
-                             }
+}
                         }
                     </select>
                 </div>
@@ -56,24 +65,31 @@
 }
 
 <script>
-    $("#saveBtn").on('click', function () {
+    $("#saveBtn").click(function () {
         $.ajax({
             url: '@Url.Action("Save","AccomodationPackage")',
             type: 'post',
             data: $("#actionForm").serialize()
         })
         .done(function (response) {
-            $("#actionModal").modal("hide");
 
-            $("#tableContainer").html(response);
-            //location.reload();
-            //if (response.Success)
-            //{
-            //   // location.reload();
-            //}
-            //else {
-            //    $(".errorMsg").html(response.Message);
-            //}
+            if (response.Success)
+            {
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
+
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Message);
+            }
 
         })
     });

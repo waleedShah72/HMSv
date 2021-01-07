@@ -9,5 +9,7 @@ namespace HMSv.Areas.Dashboard.ViewModels
 	public class AccomodationTypesListingModel
 	{
 		public IList<AccomodationTypes> AccomodationTypes { get; set; }
+
+		public PagerViewModel Pager { get; set; }
 	}
 }

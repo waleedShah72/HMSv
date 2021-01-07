@@ -1,0 +1,80 @@
+﻿
+@model HMSv.Areas.Dashboard.ViewModels.RolesCreateViewModel
+
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">
+                @if (!string.IsNullOrEmpty(Model.ID))
+				{
+                    <span>Edit a Role</span>
+				}
+				else
+				{
+                    <span>Create a Role</span>
+				}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Form-->
+            <form id="actionForm">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" placeholder="Enter role name.">
+
+                </div>
+                @*<div class="form-group">
+                    <label for="Fullname">Fullname</label>
+                    <input type="text" class="form-control" id="Fullname" name="Fullname" value="@Model.>" placeholder="Enter Full name.">
+
+                </div>*@
+                @Html.HiddenFor(a => a.ID)
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="saveBtn" type="button" class="btn btn-primary">Save</button>
+
+        </div>
+    </div>
+}
+
+<script>
+    $("#saveBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Save","Roles")',
+            type: 'post',
+            data: $("#actionForm").serialize()
+        })
+        .done(function (response) {
+            if (response.Success)
+            {
+                //success state..
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#errors").html(response.Errors);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Errors);
+            }
+
+        })
+    });
+</script>
+
+
+

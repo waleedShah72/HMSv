@@ -64,7 +64,6 @@ namespace HMSv.Areas.Dashboard.Controllers
 			{
 				AccomodationType = _serviceAccomodationtype.GetAllAccomodationTypes()
 			};
-			ViewBag.Action = "Create";
 			return PartialView("_Action", viewModel);
 		}
 
@@ -88,12 +87,29 @@ namespace HMSv.Areas.Dashboard.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Save(AccomodationPackages model)
+		public JsonResult Save(AccomodationPackages model)
 		{
+			var json = new JsonResult();
+			var error="";
+			var result = false;
 
-			var result = _service.SaveAccomodationPackages(model);
-			return RedirectToAction("Listing");
-
+			try
+			{
+				 result = _service.SaveAccomodationPackages(model);
+			}
+			catch (Exception exp)
+			{
+				error = exp.InnerException.Message+" "+exp.Message;
+			}
+			if (result)
+			{
+				json.Data = new { Success = true, Link = Url.Action("Listing", "AccomodationPackage"),Message=Status.Successfull };
+			}
+			else
+			{
+				json.Data = new { Success = false, Link = Url.Action("Listing", "AccomodationPackage"), Message = Status.Failed+" "+error };
+			}
+			return json;
 		}
 
 		public ActionResult Delete(int Id)
@@ -104,19 +120,28 @@ namespace HMSv.Areas.Dashboard.Controllers
 		}
 
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(AccomodationPackages model)
+		public JsonResult Delete(AccomodationPackages model)
 		{
-			var result = _service.DeleteAccomodationPackage(model.ID);
+			var json = new JsonResult();
+			var error = "";
+			var result = false;
+			try
+			{
+				result = _service.DeleteAccomodationPackage(model.ID);
+			}
+			catch (Exception exp)
+			{
+				error = exp.Message+" "+exp.InnerException.Message;
+			}
 			if (result)
 			{
-				return RedirectToAction("Listing");
+				json.Data = new { Success = true, Link = Url.Action("Listing", "AccomodationPackage"),Message=Status.Successfull };
 			}
 			else
 			{
-				var viewModel = new AccomodationPackageCreateModel(model);
-				return PartialView("_Delete", viewModel);
+				json.Data = new { Success = false, Link = Url.Action("Listing", "AccomodationPackage"), Message = Status.Failed + " " + error };
 			}
+			return json;
 		}
 
 		protected override void Dispose(bool disposing)

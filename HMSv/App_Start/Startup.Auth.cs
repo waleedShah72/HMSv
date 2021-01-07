@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using HMSv.Models;
 using HMSv.Data;
+using HMSv.Services;
 
 namespace HMSv
 {
@@ -19,11 +20,12 @@ namespace HMSv
             app.CreatePerOwinContext(HMSvContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+			app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
 
-            // Enable the application to use a cookie to store information for the signed in user
-            // and to use a cookie to temporarily store information about a user logging in with a third party login provider
-            // Configure the sign in cookie
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+			// Enable the application to use a cookie to store information for the signed in user
+			// and to use a cookie to temporarily store information about a user logging in with a third party login provider
+			// Configure the sign in cookie
+			app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),

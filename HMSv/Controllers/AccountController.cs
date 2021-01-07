@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HMSv.Models;
 using HMSv.Data;
+using HMSv.Services;
 
 namespace HMSv.Controllers
 {
@@ -59,7 +60,7 @@ namespace HMSv.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("LoginCustom");
         }
 
         //
@@ -71,7 +72,7 @@ namespace HMSv.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("LoginCustom",model);
             }
 
             // This doesn't count login failures towards account lockout
@@ -80,7 +81,16 @@ namespace HMSv.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+					var user = await UserManager.FindAsync(model.Email,model.Password);
+					var roles = await UserManager.GetRolesAsync(user.Id);
+					if (roles.Contains("User"))
+					{
+						return RedirectToLocal(returnUrl);
+					}
+					else
+					{
+						return RedirectToAction("Index", "Dashboard");
+					}
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -88,7 +98,7 @@ namespace HMSv.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("LoginCustom",model);
             }
         }
 
@@ -140,7 +150,7 @@ namespace HMSv.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            return View("RegisterCustom");
         }
 
         //
@@ -152,10 +162,12 @@ namespace HMSv.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,FullName=model.UserName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+					var defaultRole = "User";
+					await UserManager.AddToRoleAsync(user.Id, defaultRole);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -163,14 +175,13 @@ namespace HMSv.Controllers
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View("RegisterCustom",model);
         }
 
         //

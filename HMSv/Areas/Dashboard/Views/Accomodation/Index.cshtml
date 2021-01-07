@@ -12,7 +12,7 @@
         <form id="searchFrm">
             <div class="input-group">
                 <input type="text" id="searchTxt" class="form-control" placeholder="Search.." aria-label="Search">
-                @if (Model.Accomodations != null && Model.Accomodations.Count > 0)
+                @if (Model.AccomodationPackages != null && Model.AccomodationPackages.Count > 0)
                 {
                     <select id="AccomodationPackageID" class="form-control">
                         <option value="0">Select Type</option>
@@ -42,6 +42,23 @@
     </div>
 </div>
 
+<!-- Toasts -->
+<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+    <div id="toast" class="toast" data-delay="3000" style="position: absolute; top: 0; right: 0; z-index:3">
+        @*<div class="toast-header">
+                <img src="..." class="rounded mr-2" alt="...">
+                <strong class="mr-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+
+            </div>*@
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="toast-body text-white">
+            <span id="err"></span>
+        </div>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="actionModal" tabindex="-1" role="dialog">
@@ -58,7 +75,7 @@
                 url: $(this).attr("data-href"),
                 data: {
                     search: searchVal,
-                    accomodationTypeID: searchID
+                    accomodationPackageID: searchID
                 }
             })
             .done(function (response) {

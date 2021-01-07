@@ -18,9 +18,9 @@
                 <div class="form-group">
                     <label for="Name">Package Name</label>
                     <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" disabled="disabled">
-                    @Html.HiddenFor(a => a.ID)
-                    @Html.AntiForgeryToken()
+
                 </div>
+                @Html.HiddenFor(a => a.ID)
             </form>
         </div>
         @*<div class="errorMsg">
@@ -36,23 +36,30 @@
 
 <script>
     $("#deleteBtn").click(function () {
+        var data=$("deleteForm").serialize();
+        console.log(data);
         $.ajax({
             url: '@Url.Action("Delete","AccomodationPackage")',
             type: 'post',
-            data: $("deleteForm").serialize()
+            data:data 
         })
         .done(function (response) {
-            $("#actionModal").modal("hide");
+            if (response.Success) {
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
 
-            $("#tableContainer").html(response);
-            //location.reload();
-            //if (response.Success)
-            //{
-            //   // location.reload();
-            //}
-            //else {
-            //    $(".errorMsg").html(response.Message);
-            //}
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Message);
+            }
 
         })
     });

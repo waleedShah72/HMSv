@@ -5,7 +5,16 @@
 {
     <div class="modal-content">
         <div class="modal-header bg-info text-white">
-            <h5 class="modal-title">@ViewBag.Action new Accomodation</h5>
+            <h5 class="modal-title">
+                @if (Model.ID == 0)
+                {
+                    <span>Create new Accomodation</span>
+}
+                else
+                {
+                    <span>Edit an Accomodation</span>
+}
+            </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span class="text-white" aria-hidden="true">&times;</span>
             </button>
@@ -15,7 +24,7 @@
             <form id="actionForm">
                 <div class="form-group">
                     <label for="Name">Name</label>
-                    <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" placeholder="Enter package name.">
+                    <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" placeholder="Enter accomodation name.">
 
                 </div>
                 <div class="form-group">
@@ -53,18 +62,22 @@
             data: $("#actionForm").serialize()
         })
         .done(function (response) {
-            $("#actionModal").modal("hide");
+            if (response.Success) {
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-success");
+                $("#err").html(response.Message);
+                $("#actionModal").modal("hide");
+                $.get(response.Link, function (partial) {
+                    $("#tableContainer").html(partial);
+                });
 
-            $("#tableContainer").html(response);
-            //location.reload();
-            //if (response.Success)
-            //{
-            //   // location.reload();
-            //}
-            //else {
-            //    $(".errorMsg").html(response.Message);
-            //}
-
+            }
+            else {
+                $("#actionModal").modal("hide");
+                $("#toast").toast('show');
+                $("#toast").addClass("bg-danger");
+                $("#err").html(response.Message);
+            }
         })
     });
 </script>
