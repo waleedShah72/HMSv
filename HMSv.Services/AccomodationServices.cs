@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 namespace HMSv.Services
 {
-	public class AccomodationServices
+	public class AccomodationServices 
 	{
 		public IList<Accomodations> GetAllAccomodations()
 		{

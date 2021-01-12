@@ -70,6 +70,14 @@
     <Compile Include="Migrations\202011221430287_AddedPropertiesToUserTable.Designer.cs">
       <DependentUpon>202011221430287_AddedPropertiesToUserTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101120215116_AddedPicturesTable.cs" />
+    <Compile Include="Migrations\202101120215116_AddedPicturesTable.Designer.cs">
+      <DependentUpon>202101120215116_AddedPicturesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101121937174_AddedPictureJoiningTables.cs" />
+    <Compile Include="Migrations\202101121937174_AddedPictureJoiningTables.Designer.cs">
+      <DependentUpon>202101121937174_AddedPictureJoiningTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +100,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011221430287_AddedPropertiesToUserTable.resx">
       <DependentUpon>202011221430287_AddedPropertiesToUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101120215116_AddedPicturesTable.resx">
+      <DependentUpon>202101120215116_AddedPicturesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101121937174_AddedPictureJoiningTables.resx">
+      <DependentUpon>202101121937174_AddedPictureJoiningTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -28,6 +28,12 @@ namespace HMSv.Data
 		public DbSet<AccomodationPackages> AccomodationPackage { get; set; }
 
 		public DbSet<Accomodations> Accomodation { get; set; }
+
+		public DbSet<Pictures> Picture { get; set; }
+
+		public DbSet<AccomodationPackagePictures> AccomodationPackagePicture { get; set; }
+
+		public DbSet<AccomodationPictures> AccomodationPicture { get; set; }
 	}
 
 	// You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.

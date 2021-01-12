@@ -198,6 +198,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AccomodationViewModels.cs" />
+    <Compile Include="ViewModels\HomeViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Dashboard\Content\css\simple-sidebar.css" />
@@ -439,6 +441,7 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\Account\LoginCustom.cshtml" />
     <Content Include="Views\Account\RegisterCustom.cshtml" />
+    <Content Include="Views\Home\GetAccomodation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

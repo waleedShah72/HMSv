@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace HMSv.Areas.Dashboard.Controllers
 {
+	[Authorize(Roles = "Admin,Frontdesk,Manager")]
 	public class AccomodationController : Controller
 	{
 		private AccomodationServices _service;

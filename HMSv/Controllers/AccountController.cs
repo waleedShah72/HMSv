@@ -78,6 +78,8 @@ namespace HMSv.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+			if (string.IsNullOrEmpty(returnUrl))
+				returnUrl = Url.Action("Index","Dashboard");
             switch (result)
             {
                 case SignInStatus.Success:
@@ -85,13 +87,14 @@ namespace HMSv.Controllers
 					var roles = await UserManager.GetRolesAsync(user.Id);
 					if (roles.Contains("User"))
 					{
-						return RedirectToLocal(returnUrl);
+						return RedirectToAction("Index", "Home");
 					}
 					else
 					{
-						return RedirectToAction("Index", "Dashboard");
+						return RedirectToLocal(returnUrl);
+
 					}
-                case SignInStatus.LockedOut:
+				case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });

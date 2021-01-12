@@ -19,5 +19,7 @@ namespace HMSv.Entities
 		public int AccomodationTypeID { get; set; }
 
 		public AccomodationTypes AccomodationType { get; set; }
+
+		public ICollection<AccomodationPackagePictures> AccomodationPackagePictures { get; set; }
 	}
 }
