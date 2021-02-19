@@ -14,4 +14,10 @@ namespace HMSv.ViewModels
 		public IList<AccomodationPackages> AccomodationPackages { get; set; }
 		public IList<Accomodations> Accomodations { get; set; }
 	}
+
+	public class AccomodationPackageDetailsViewModels
+	{
+		public AccomodationPackages AccomodationPackage { get; set; }
+
+	}
 }

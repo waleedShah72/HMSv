@@ -16,10 +16,12 @@ namespace HMSv.Entities
 
 		public decimal FeePerNight { get; set; }
 
+		public string Description { get; set; }
+
 		public int AccomodationTypeID { get; set; }
 
 		public AccomodationTypes AccomodationType { get; set; }
 
-		public ICollection<AccomodationPackagePictures> AccomodationPackagePictures { get; set; }
+		public List<AccomodationPackagePictures> AccomodationPackagePictures { get; set; }
 	}
 }

@@ -237,6 +237,15 @@
     <Content Include="Content\Images\header\img_bg_2.jpg" />
     <Content Include="Content\Images\header\img_bg_4.jpg" />
     <Content Include="Content\Images\logos\logo.png" />
+    <Content Include="Content\Images\site\124c8b83-8716-4300-bc32-de506a0e8459.jpg" />
+    <Content Include="Content\Images\site\3d672a3f-5300-4c2f-8b74-bbc3ba3f7bdf.jpg" />
+    <Content Include="Content\Images\site\8e496e20-5e82-4d9b-aa90-4e55742aa5b5.jpg" />
+    <Content Include="Content\Images\site\aa0dd663-c170-48f2-9154-852ee35ccbf9.jpg" />
+    <Content Include="Content\Images\site\bbc7e359-1542-4f0c-8a54-2269599f46ea.jpg" />
+    <Content Include="Content\Images\site\bd8492b8-8716-471a-a531-d30d59a697cf.jpg" />
+    <Content Include="Content\Images\site\c88bfd70-987e-4e34-8e22-0b6601d1651f.jpg" />
+    <Content Include="Content\Images\site\d637f0f8-9915-4242-ac05-7de2214341cc.jpg" />
+    <Content Include="Content\Images\site\default.png" />
     <Content Include="Content\js\bootstrap-datepicker.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\google_map.js" />
@@ -405,6 +414,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -442,6 +452,7 @@
     <Content Include="Views\Account\LoginCustom.cshtml" />
     <Content Include="Views\Account\RegisterCustom.cshtml" />
     <Content Include="Views\Home\GetAccomodation.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,7 @@ namespace HMSv.ViewModels
 	public class HomeViewModels
 	{
 		public IList<AccomodationTypes> AccomodationType { get; set; }
+		public IList<AccomodationPackages> AccomodationPackage { get; set; }
 
 
 	}

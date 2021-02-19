@@ -91,6 +91,7 @@
     <Compile Include="ApplicationRoleManager.cs" />
     <Compile Include="ApplicationSignInManager.cs" />
     <Compile Include="ApplicationUserManager.cs" />
+    <Compile Include="DashboardService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Status.cs" />
   </ItemGroup>

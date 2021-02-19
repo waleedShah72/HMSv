@@ -14,7 +14,7 @@
                             <div class="slider-text-inner text-center">
                                 <h2>Welcome To Four Apple Hotels</h2>
                                 <h1>A Luxury Hotel</h1>
-                                <p><a class="btn btn-success btn-demo" href="#"> View Detail</a> <a class="btn btn-primary btn-learn">Know More</a></p>
+                                <p><a class="btn btn-success btn-demo" href="#fourapple-services">Our Services</a> <a href="#fourapple-rooms" class="btn btn-primary btn-learn">Bookings</a></p>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                             <div class="slider-text-inner text-center">
                                 <h2>Discover &amp; Enjoy</h2>
                                 <h1>Let Your Imagination Go Wild</h1>
-                                <p><a class="btn btn-success btn-demo" href="#"> View Detail</a> <a class="btn btn-primary btn-learn">Know More</a></p>
+                                <p><a class="btn btn-success btn-demo" href="#fourapple-services">Our Services</a> <a href="#fourapple-rooms" class="btn btn-primary btn-learn">Bookings</a></p>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             <div class="slider-text-inner text-center">
                                 <h2>You are invited</h2>
                                 <h1>We know how to please you</h1>
-                                <p><a class="btn btn-success btn-demo" href="#"> View Detail</a> <a class="btn btn-primary btn-learn">Know More</a></p>
+                                <p><a class="btn btn-success btn-demo" href="#fourapple-services">Our Services</a> <a href="#fourapple-rooms" class="btn btn-primary btn-learn">Bookings</a></p>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             <div class="slider-text-inner text-center">
                                 <h2>Come &amp; enjoy the unforgetable nights</h2>
                                 <h1>In the heart of Four Apple Hotels</h1>
-                                <p><a class="btn btn-success btn-demo" href="#"> View Detail</a> <a class="btn btn-primary btn-learn">Know More</a></p>
+                                <p><a class="btn btn-success btn-demo" href="#fourapple-services">Our Services</a> <a href="#fourapple-rooms" class="btn btn-primary btn-learn">Bookings</a></p>
                             </div>
                         </div>
                     </div>
@@ -174,42 +174,53 @@
 </div>
 
 @if (Model.AccomodationType != null || Model.AccomodationType.Count > 0)
-{
+    {
+        var i = 0;
     <div id="fourapple-rooms" class="fourapple-light-grey">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3 text-center fourapple-heading animate-box">
                     <span><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span>
-                    <h2>Accomodation Types</h2>
-                    <p>We love to tell our successful far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 animate-box">
-                    <div class="owl-carousel owl-carousel2">
+                    <h2>Rooms &amp; Suites</h2>
+                    <p>Select Accomodation Type</p>
+                    <p>
                         @foreach (var item in Model.AccomodationType)
                         {
-                            <div class="item">
-                                <a href="images/room-1.jpg" class="room image-popup-link" style="background-image: url(images/room-1.jpg);"></a>
-                                <div class="desc text-center">
-                                    <span class="rate-star"><i class="icon-star-full full"></i><i class="icon-star-full full"></i><i class="icon-star-full full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span>                                    <h3>
-                                        <a href="@Url.Action("GetAccomodation","Home", new {accomodationTypeID=item.ID })">@item.Name</a>
-                                    </h3>
-                                    <p class="price">
-                                        <span class="price">@item.Description</span>
-                                    </p>
-                                    <p><a class="btn btn-primary btn-book">Book now!</a></p>
-                                </div>
-                            </div>
-}
-
-                    </div>
-                </div>
-                <div class="col-md-12 text-center animate-box">
-                    <a href="#">View all rooms <i class="icon-arrow-right3"></i></a>
+                            <button data-id="@item.ID" class="btn btn-sm changeAccomadtionType">@item.Name</button>
+                        }
+                    </p>
                 </div>
             </div>
+            @foreach (var accomodationType in Model.AccomodationType)
+            {
+                <div data-id="@accomodationType.ID" class="row accomodationTypeRow" >
+                    <div class="col-md-12 animate-box">
+                        <div class="owl-carousel owl-carousel2">
+                            @foreach (var item in Model.AccomodationPackage.Where(x=>x.AccomodationTypeID==accomodationType.ID))
+                            {
+                                var thumbnail = item.AccomodationPackagePictures != null && item.AccomodationPackagePictures.Count > 0 ? item.AccomodationPackagePictures.First() : new HMSv.Entities.AccomodationPackagePictures();
+                                var url = thumbnail.Picture != null ? thumbnail.Picture.URL : "default.png";
+                                <div class="item">
+                                    <a href="@Url.Action("Details","Home", new {accomodationPackageID=item.ID })" class="room" style="background-image: url('../../Content/Images/site/@url');"></a>
+                                    <div class="desc text-center">
+                                        <span class="rate-star"><i class="icon-star-full full"></i><i class="icon-star-full full"></i><i class="icon-star-full full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span>                                    <h3>
+                                            <a href="@Url.Action("Details","Home", new {accomodationPackageID=item.ID })">@item.Name</a>
+                                        </h3>
+                                        <p class="price">
+                                            <span class="price">@item.FeePerNight AED</span>
+                                        </p>
+                                        <p><a href="@Url.Action("Details","Home", new {accomodationPackageID=item.ID })" class="btn btn-primary btn-book">Book now!</a></p>
+                                    </div>
+                                </div>
+}
+
+                        </div>
+                    </div>
+
+                </div>
+i++;
+            }
+
         </div>
     </div>
 }
-

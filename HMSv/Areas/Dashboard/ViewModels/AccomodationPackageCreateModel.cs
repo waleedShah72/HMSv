@@ -19,7 +19,7 @@ namespace HMSv.Areas.Dashboard.ViewModels
 			NoOfRooms = model.NoOfRooms;
 			FeePerNight = model.FeePerNight;
 			AccomodationTypeID = model.AccomodationTypeID;
-			//AccomodationType = model.AccomodationType;
+			Description = model.Description;
 		}
 		public int? ID { get; set; }
 
@@ -31,6 +31,12 @@ namespace HMSv.Areas.Dashboard.ViewModels
 
 		public int? AccomodationTypeID { get; set; }
 
+		public string Description { get; set; }
+
+		public string PictureIDs { get; set; }
+
 		public IList<AccomodationTypes> AccomodationType { get; set; }
+
+		public List<AccomodationPackagePictures> AccomodationPackagePictures { get; set; }
 	}
 }

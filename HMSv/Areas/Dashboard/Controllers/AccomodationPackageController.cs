@@ -9,11 +9,12 @@ using System.Web.Mvc;
 
 namespace HMSv.Areas.Dashboard.Controllers
 {
-	[Authorize(Roles = "Admin,Frontdesk,Manager")]
+	//[Authorize(Roles = "Admin,Frontdesk,Manager")]
 	public class AccomodationPackageController : Controller
     {
 		private AccomodationPackageService _service;
 		private AccomodationTypeService _serviceAccomodationtype;
+		private DashboardService _serviceDashboard;
 
 		public AccomodationPackageController()
 		{
@@ -21,6 +22,8 @@ namespace HMSv.Areas.Dashboard.Controllers
 				_service = new AccomodationPackageService();
 			if (_serviceAccomodationtype == null)
 				_serviceAccomodationtype = new AccomodationTypeService();
+			if (_serviceDashboard == null)
+				_serviceDashboard = new DashboardService();
 		}
 		// GET: Dashboard/AccomodationPackage
 		public ActionResult Index()
@@ -79,7 +82,8 @@ namespace HMSv.Areas.Dashboard.Controllers
 			{
 				var viewModel = new AccomodationPackageCreateModel(result)
 				{
-					AccomodationType = _serviceAccomodationtype.GetAllAccomodationTypes()
+					AccomodationType = _serviceAccomodationtype.GetAllAccomodationTypes(),
+					AccomodationPackagePictures=result.AccomodationPackagePictures.ToList()
 				};
 				ViewBag.Action = "Edit";
 				return PartialView("_Action", viewModel);
@@ -88,15 +92,43 @@ namespace HMSv.Areas.Dashboard.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public JsonResult Save(AccomodationPackages model)
+		public JsonResult Save(AccomodationPackageCreateModel model)
 		{
 			var json = new JsonResult();
 			var error="";
 			var result = false;
 
+			//model.PictureIDs = "90,67,23" = ["90", "67", "23"] = {90, 67, 23}
+			List<int> pictureIDs = !string.IsNullOrEmpty(model.PictureIDs) ? model.PictureIDs.Split(',').Select(x => int.Parse(x)).ToList() : new List<int>();
+			var pictures = _serviceDashboard.GetPicturesbyId(pictureIDs);
+			AccomodationPackages package;
+			if (model.ID == 0)
+			{
+				package = new AccomodationPackages();
+				package.Name = model.Name;
+				package.NoOfRooms = model.NoOfRooms.Value;
+				package.FeePerNight = model.FeePerNight.Value;
+				package.AccomodationTypeID = model.AccomodationTypeID.Value;
+				package.Description = model.Description;
+				package.AccomodationPackagePictures = new List<AccomodationPackagePictures>();
+				package.AccomodationPackagePictures.AddRange(pictures.Select(x => new AccomodationPackagePictures() { PictureID = x.ID }));
+			}
+			else
+			{
+			    package = _service.GetAccomodationPackageById(model.ID.Value);
+				package.ID = model.ID.Value;
+				package.Name = model.Name;
+				package.NoOfRooms = model.NoOfRooms.Value;
+				package.FeePerNight = model.FeePerNight.Value;
+				package.AccomodationTypeID = model.AccomodationTypeID.Value;
+				package.Description = model.Description;
+				package.AccomodationPackagePictures.Clear();
+				package.AccomodationPackagePictures.AddRange(pictures.Select(x => new AccomodationPackagePictures() { PictureID = x.ID, AccomodationPackageID=package.ID }));
+
+			}
 			try
 			{
-				 result = _service.SaveAccomodationPackages(model);
+				 result = _service.SaveAccomodationPackages(package);
 			}
 			catch (Exception exp)
 			{
@@ -148,6 +180,7 @@ namespace HMSv.Areas.Dashboard.Controllers
 		protected override void Dispose(bool disposing)
 		{
 			_service = null;_serviceAccomodationtype = null;
+			_serviceDashboard = null;
 			base.Dispose(disposing);
 		}
 	}

@@ -24,14 +24,22 @@ namespace HMSv.Controllers
 		}
 		public ActionResult Index()
 		{
-			var _service = _serviceAccomodationType;
 			var viewModel = new HomeViewModels() {
-				AccomodationType=_service.GetAllAccomodationTypes()
+				AccomodationType=_serviceAccomodationType.GetAllAccomodationTypes(),
+				AccomodationPackage=_serviceAccomodationPackage.GetAllAccomodationPackages()
 			};
 
 			return View(viewModel);
 		}
 
+		public ActionResult Details(int accomodationPackageID)
+		{
+			var viewModel = new AccomodationPackageDetailsViewModels()
+			{
+				AccomodationPackage = _serviceAccomodationPackage.GetAccomodationPackageById(accomodationPackageID)
+			};
+			return View(viewModel);
+		}
 		public ActionResult GetAccomodation(int? accomodationTypeID, int? accomodationPackageID)
 		{
 			var accomodationType = _serviceAccomodationType.GetAccomodationTypeById(accomodationTypeID.Value);
